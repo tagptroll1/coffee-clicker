@@ -53,7 +53,7 @@
     "updater": {
       "active": true,
       "endpoints": [
-          "https://gist.githubusercontent.com/tagptroll1/8528363da455b1f3f7dabd2555385a39/raw"
+          "https://gist.githubusercontent.com/tagptroll1/8528363da455b1f3f7dabd2555385a39/raw/coffee_clicker_updates"
       ],
       "dialog": true,
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEJFNENDMEEyMTlFMkZCMzkKUldRNSsrSVpvc0JNdmcyTUNmN0tML2ZyMy9VbGg5THI1RlBvTlljQ0l5Vk02R0I3Q2dKODZyNlkK"
