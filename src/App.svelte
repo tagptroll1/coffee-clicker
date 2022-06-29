@@ -49,7 +49,7 @@ import { onMount } from "svelte";
 </script>
 
 <main>
-	v1.1
+	v1.2 test
 	<section class="clicking-side">
 
 		<h1>{beautifyNumber(Math.ceil($money))} ☕</h1>
