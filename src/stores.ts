@@ -64,6 +64,7 @@ export const upgrades = (upgrades => {
             set(upgrades);
             
             return moneySpent;
-        }
+        },
+        set
     };
 })(upgrds);
