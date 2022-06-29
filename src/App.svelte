@@ -19,9 +19,7 @@ import { onMount } from "svelte";
 		if (tick % 500 === 0) {
 
 			ensureNotNaNValues();
-			console.log({$clicks, $money, $moneyPercentModifier, $moneyPerSecond, $upgrades, $upgradesPurchased});
-
-			saveSave();
+			saveGame();
 			tick = 0;
 		}
         requestAnimationFrame(loop);
@@ -83,21 +81,25 @@ import { onMount } from "svelte";
 				const saveUpgrade = data.upgrades.find(d => d.name === upgrade.name);
 				upgrade.amountPurchased = saveUpgrade.amountPurchased;
 				upgrade.disabled = saveUpgrade.disabled;
-				upgrade.increasePrice();
+				
 				if (upgrade.isCps) {
 					upgrade.coffeePerSecond = saveUpgrade.coffeePerSecond;
 					upgrade.totalCoffeePerSecond = upgrade.coffeePerSecond * upgrade.amountPurchased;
 					
 					
 					cps += upgrade.totalCoffeePerSecond;
+					upgrade.price = Math.ceil(
+						upgrade.basePrice * Math.pow(1.15, upgrade.amountPurchased)
+					);
 				}
 			};
+			$upgrades = [...$upgrades];
 			$upgradesPurchased = data.upgradesPurchased;
 			$moneyPerSecond = cps;
 		}
 	}
 
-	function saveSave() {
+	function saveGame() {
 		let save = {
 			clicks: $clicks ?? 0,
 			money: $money ?? 0,
