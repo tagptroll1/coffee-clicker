@@ -81,16 +81,17 @@ import { onMount } from "svelte";
 				const saveUpgrade = data.upgrades.find(d => d.name === upgrade.name);
 				upgrade.amountPurchased = saveUpgrade.amountPurchased;
 				upgrade.disabled = saveUpgrade.disabled;
-				
+				upgrade.price = Math.ceil(
+						upgrade.basePrice * Math.pow(1.15, upgrade.amountPurchased)
+					);
+
 				if (upgrade.isCps) {
 					upgrade.coffeePerSecond = saveUpgrade.coffeePerSecond;
 					upgrade.totalCoffeePerSecond = upgrade.coffeePerSecond * upgrade.amountPurchased;
 					
 					
 					cps += upgrade.totalCoffeePerSecond;
-					upgrade.price = Math.ceil(
-						upgrade.basePrice * Math.pow(1.15, upgrade.amountPurchased)
-					);
+					
 				}
 			};
 			$upgrades = [...$upgrades];
