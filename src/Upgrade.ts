@@ -61,7 +61,10 @@ export class Upgrade {
   purchase() {
     this.amountPurchased++;
     this.increasePrice();
-    this.callback();
+
+    if (this.callback) {
+      this.callback();
+    }
 
     if (this.isCps) {
         this.totalCoffeePerSecond = this.coffeePerSecond * this.amountPurchased;
