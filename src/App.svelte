@@ -8,6 +8,8 @@ import { onMount } from "svelte";
 
     let _lastFrameMs: number = 0;
 	let tick: number = 0;
+	let showMoneyEarnedOffline = false;
+	let moneyEarnedOffline = 0;
 
     function loop(timestamp) {
 		let delta = (timestamp - _lastFrameMs) / 1000;
@@ -66,6 +68,7 @@ import { onMount } from "svelte";
 	}
 
 	function loadSave() {
+		moneyEarnedOffline = 0;
 		let save = localStorage.getItem("save");
 		if (save) {
 			let data = JSON.parse(save);
@@ -97,6 +100,17 @@ import { onMount } from "svelte";
 			$upgrades = [...$upgrades];
 			$upgradesPurchased = data.upgradesPurchased;
 			$moneyPerSecond = cps;
+
+			if (data.time) {
+				const timePassed = (Number(new Date()) - data.time) / 1000;
+				moneyEarnedOffline = ($moneyPerSecond * $moneyPercentModifier) * timePassed;
+				$money += moneyEarnedOffline;
+				
+				showMoneyEarnedOffline = true;
+				setTimeout(() => {
+					showMoneyEarnedOffline = false;
+				}, 10000);
+			}
 		}
 	}
 
@@ -110,7 +124,8 @@ import { onMount } from "svelte";
 			upgradesPurchased: $upgradesPurchased ?? 0,
 			clickAddition: $clickAddition ?? 0,
 			clickMultiplier: $clickMultiplier ?? 1,
-			clickPercentModifier: $clickPercentModifier ?? 1
+			clickPercentModifier: $clickPercentModifier ?? 1,
+			time: Number(new Date())
 		};
 		localStorage.setItem("save", JSON.stringify(save));
 	}
@@ -144,8 +159,15 @@ import { onMount } from "svelte";
 	}
 </script>
 
+
 <main>
 	<section class="clicking-side">
+		{#if showMoneyEarnedOffline && moneyEarnedOffline > 0}
+		<div class="offline-money" on:click={() => showMoneyEarnedOffline = false}>
+
+			Money earned offline: {beautifyNumber(Math.ceil(moneyEarnedOffline))}
+		</div>
+		{/if}
 
 		<h1>{beautifyNumber(Math.ceil($money))} ☕</h1>
 		
@@ -159,7 +181,7 @@ import { onMount } from "svelte";
 	<aside class="shop">
 
 		<h2>Shop</h2>
-		<small>v0.1.9</small>
+		<small>v0.1.10</small>
 		<ul>
 			{#each $upgrades as upgrade}
 				<li>
@@ -192,14 +214,9 @@ import { onMount } from "svelte";
 </main>
 
 <style>
-	main {
-		display: flex;
-		flex-direction: row;
-		gap: 5rem;	
-		height: 100%;	
-	}
-
-	section {
+	.clicking-side {
+		position: fixed;
+		bottom: 0;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
@@ -209,8 +226,31 @@ import { onMount } from "svelte";
 
 	}
 
+	.offline-money {
+		position: absolute;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		top: 2rem;
+		padding: 1.5rem;
+
+		background-color: darkgrey;
+		color: white;
+		border-radius: 5%;
+	}
+
+	main {
+		position: relative;
+		display: flex;
+		flex-direction: row;
+		gap: 5rem;	
+		height: 100%;	
+	}
+
+
 	aside.shop {
 		width: 50%;
+		margin-left: auto;
 	}
 
 	ul {
@@ -224,6 +264,7 @@ import { onMount } from "svelte";
 		text-transform: uppercase;
 		font-size: 4em;
 		font-weight: 100;
+		font-family: monospace;
 	}
 
 	button.upgrades {
