@@ -159,7 +159,7 @@ import { onMount } from "svelte";
 	<aside class="shop">
 
 		<h2>Shop</h2>
-		<small>v0.1.8</small>
+		<small>v0.1.9</small>
 		<ul>
 			{#each $upgrades as upgrade}
 				<li>
